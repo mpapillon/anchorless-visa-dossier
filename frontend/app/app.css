@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans:
+    "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+html,
+body {
+  @apply bg-slate-50 dark:bg-slate-900;
+
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+  }
+}
