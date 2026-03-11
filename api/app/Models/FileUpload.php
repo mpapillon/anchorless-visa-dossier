@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\FileUploadType;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,6 +28,11 @@ class FileUpload extends Model
         ];
     }
 
+    public function scopeWhereType(Builder $query, FileUploadType $type): void
+    {
+        $query->where('type', $type);
+    }
+
     public function getFormattedSizeAttribute(): string
     {
         $bytes = $this->size;
@@ -36,6 +42,6 @@ class FileUpload extends Model
             $bytes /= 1024;
         }
 
-        return round($bytes, 2) . ' ' . $units[$i];
+        return round($bytes, 2).' '.$units[$i];
     }
 }

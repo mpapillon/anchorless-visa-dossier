@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\FileUploadType;
 use App\Http\Requests\StoreFileUploadRequest;
 use App\Http\Resources\FileUploadResource;
 use App\Models\FileUpload;
@@ -14,11 +15,11 @@ class FileUploadController extends Controller
      */
     public function index()
     {
-        $files = FileUpload::query()
-            ->latest()
-            ->get()
-            ->groupBy('type')
-            ->map(fn ($group) => FileUploadResource::collection($group));
+        $files = collect(FileUploadType::cases())->mapWithKeys(fn (FileUploadType $type) => [
+            $type->value => FileUploadResource::collection(
+                FileUpload::query()->whereType($type)->latest()->get()
+            ),
+        ]);
 
         return response()->json($files);
     }

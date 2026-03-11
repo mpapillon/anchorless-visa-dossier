@@ -26,10 +26,15 @@ it('returns files grouped by type', function () {
         ->and($data[FileUploadType::Photo->value])->toHaveCount(2);
 });
 
-it('returns an empty object when no files exist', function () {
-    $this->getJson('/api/file-uploads')
-        ->assertSuccessful()
-        ->assertExactJson([]);
+it('returns all types with empty arrays when no files exist', function () {
+    $response = $this->getJson('/api/file-uploads')->assertSuccessful();
+
+    $data = $response->json();
+
+    expect($data)->toHaveKeys(['visa_request_form', 'photo', 'passport'])
+        ->and($data['visa_request_form'])->toBeEmpty()
+        ->and($data['photo'])->toBeEmpty()
+        ->and($data['passport'])->toBeEmpty();
 });
 
 // --- store ---
@@ -50,7 +55,7 @@ it('uploads a file successfully', function () {
         ]);
 
     expect(FileUpload::count())->toBe(1);
-    Storage::assertExists('upload/' . basename(FileUpload::first()->file_path));
+    Storage::assertExists('upload/'.basename(FileUpload::first()->file_path));
 });
 
 it('rejects a file exceeding 4MB', function () {
@@ -71,9 +76,9 @@ it('rejects a disallowed file type', function (string $mime, string $name) {
         'type' => FileUploadType::VisaRequestForm->value,
     ])->assertUnprocessable();
 })->with([
-    'gif'  => ['image/gif', 'image.gif'],
+    'gif' => ['image/gif', 'image.gif'],
     'webp' => ['image/webp', 'image.webp'],
-    'mp4'  => ['video/mp4', 'video.mp4'],
+    'mp4' => ['video/mp4', 'video.mp4'],
 ]);
 
 it('rejects an invalid type value', function () {
