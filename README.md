@@ -33,14 +33,10 @@ npm install
 cd api && php artisan serve
 ```
 
-**Frontend** - available at `http://localhost:8000`.
+**Frontend** - available at `http://localhost:5173/`
 
 ```bash
-# Development
 cd frontend && npm run dev
-
-# Production
-cd frontend && npm run build && npm run start
 ```
 
 ## Tests
